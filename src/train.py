@@ -5,47 +5,51 @@ from mlp import MLPEngine
 from neumf import NeuMFEngine
 from data import SampleGenerator
 
-gmf_config = {'alias': 'gmf_factor32neg4',
+gmf_config = {'alias': 'gmf_factor8neg4',
               'num_epoch': 200,
               'batch_size': 1024,
               'optimizer': 'adam',
               'adam_lr': 1e-3,
               'num_users': 6040,
               'num_items': 3706,
-              'latent_dim': 32,
+              'latent_dim': 8,
               'num_negative': 4,
               'use_cuda': True,
               'device_id': 2,
               'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
 
-mlp_config = {'alias': 'mlp_factor32neg4',
+mlp_config = {'alias': 'mlp_factor8neg4_bz256_dp1',
               'num_epoch': 200,
-              'batch_size': 1024,
+              'batch_size': 256, # 1024,
               'optimizer': 'adam',
               'adam_lr': 1e-3,
               'num_users': 6040,
               'num_items': 3706,
-              'latent_dim': 32,
+              'latent_dim': 8,
               'num_negative': 4,
-              'layers': [64,32,16,8],  # layers[0] is the concat of latent user vector & latent item vector
+              'layers': [16,32,16,8],  # layers[0] is the concat of latent user vector & latent item vector
               'use_cuda': True,
               'device_id': 2,
               'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
 
-neumf_config = {'alias': 'neumf_factor32neg4',
+neumf_config = {'alias': 'no_pretrain_neumf_factor8neg4',
                 'num_epoch': 200,
                 'batch_size': 1024,
                 'optimizer': 'adam',
                 'adam_lr': 1e-3,
                 'num_users': 6040,
                 'num_items': 3706,
-                'latent_dim_mf': 32,
-                'latent_dim_mlp': 32,
+                'latent_dim_mf': 8,
+                'latent_dim_mlp': 8,
                 'num_negative': 4,
-                'layers': [64,32,16,8],  # layers[0] is the concat of latent user vector & latent item vector
+                'layers': [16,32,16,8],  # layers[0] is the concat of latent user vector & latent item vector
                 'use_cuda': True,
                 'device_id': 2,
-                'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
+                'pretrain': False,
+                'pretrain_mf': 'checkpoints/{}'.format('gmf_factor8neg4_Epoch100_HR0.6391_NDCG0.2852.model'),
+                'pretrain_mlp': 'checkpoints/{}'.format('mlp_factor8neg4_Epoch100_HR0.5606_NDCG0.2463.model'),
+                'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'
+                }
 
 # Load Data
 ml1m_dir = 'data/ml-1m/ratings.dat'
