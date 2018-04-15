@@ -27,6 +27,9 @@ The authors of NCF actually published [a nice implementation](https://github.com
 > `train.py`: entry point for train a NCF model
 
 ## Performance
-The hyper params are not tuned. Better performance can be achieved with careful tuning, especially for the MLP model.
+The hyper params are not tuned. Better performance can be achieved with careful tuning, especially for the MLP model. Pretraining the user embedding & item embedding might be helpful to improve the performance of the MLP model. 
+
+## TODO
+- [ ] check the pretraining improved version of MLP
 
 
