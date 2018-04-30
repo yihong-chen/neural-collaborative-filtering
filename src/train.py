@@ -14,13 +14,14 @@ gmf_config = {'alias': 'gmf_factor8neg4',
               'num_items': 3706,
               'latent_dim': 8,
               'num_negative': 4,
+              'l2_regularization': 0.01,
               'use_cuda': True,
               'device_id': 2,
               'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
 
-mlp_config = {'alias': 'mlp_factor8neg4_bz32',
+mlp_config = {'alias': 'mlp_factor8neg4_bz256_l20.0000001',
               'num_epoch': 200,
-              'batch_size': 32, # 1024,
+              'batch_size': 256,  # 1024,
               'optimizer': 'adam',
               'adam_lr': 1e-3,
               'num_users': 6040,
@@ -28,8 +29,9 @@ mlp_config = {'alias': 'mlp_factor8neg4_bz32',
               'latent_dim': 8,
               'num_negative': 4,
               'layers': [16,32,16,8],  # layers[0] is the concat of latent user vector & latent item vector
+              'l2_regularization': 0.0000001,  # MLP model is sensitive to hyper params
               'use_cuda': True,
-              'device_id': 2,
+              'device_id': 6,
               'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
 
 neumf_config = {'alias': 'pretrain_neumf_factor8neg4',
@@ -43,6 +45,7 @@ neumf_config = {'alias': 'pretrain_neumf_factor8neg4',
                 'latent_dim_mlp': 8,
                 'num_negative': 4,
                 'layers': [16,32,16,8],  # layers[0] is the concat of latent user vector & latent item vector
+                'l2_regularization': 0.01,
                 'use_cuda': True,
                 'device_id': 2,
                 'pretrain': True,

@@ -39,7 +39,12 @@ Note that the MLP model was trained from scratch but the authors suggest that th
 
 The pretrained version converges much faster.
 
+### L2 regularization for MLP model
+a bit l2 regulzrization seems to improve the performance of the MLP model
+
+![L2 for MLP](./src/figures/mlp_l2_reg.png)
 ## TODO
 - [ ] check the pretraining improved version of MLP
+- [ ] migrate to pytorch 0.4
 
 
