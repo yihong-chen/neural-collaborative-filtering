@@ -31,20 +31,32 @@ The hyper params are not tuned. Better performance can be achieved with careful 
 
 Experiments' results with `num_negative_samples = 4` and `dim_latent_factor=8` are shown as follows
 
-![GMF V.S. MLP](./src/figures/factor8neg4.png)
+![GMF V.S. MLP](./res/figure/factor8neg4.png)
 
 Note that the MLP model was trained from scratch but the authors suggest that the performance might be boosted by pretrain the embedding layer with GMF model.
 
-![NeuMF pretrain V.S no pretrain](./src/figures/neumf_factor8neg4.png)
+![NeuMF pretrain V.S no pretrain](./res/figure/neumf_factor8neg4.png)
 
 The pretrained version converges much faster.
 
 ### L2 regularization for MLP model
 a bit l2 regulzrization seems to improve the performance of the MLP model
 
-![L2 for MLP](./src/figures/mlp_l2_reg.PNG)
+![L2 for MLP](./res/figure/mlp_l2_reg.PNG)
+
+### MLP with pretrained user/item embedding
+Pre-training the MLP model with user/item embedding from the trained GMF gives better result.
+
+MLP network size = [16, 64, 32, 16, 8]
+
+![Pretrain for MLP](./res/figure/mlp_pretrain_hr.png)
+![Pretrain for MLP](./res/figure/mlp_pretrain_ndcg.png)
+
 ## TODO
-- [ ] check the pretraining improved version of MLP
+
 - [ ] migrate to pytorch 0.4
+- [ ] num of negative samples
+- [ ] check NDCG metric
+
 
 

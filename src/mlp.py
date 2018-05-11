@@ -1,11 +1,13 @@
 import torch
+from gmf import GMF
 from engine import Engine
-from utils import use_cuda
+from utils import use_cuda, resume_checkpoint
 
 
 class MLP(torch.nn.Module):
     def __init__(self, config):
         super(MLP, self).__init__()
+        self.config = config
         self.num_users = config['num_users']
         self.num_items = config['num_items']
         self.latent_dim = config['latent_dim']
@@ -36,6 +38,16 @@ class MLP(torch.nn.Module):
     def init_weight(self):
         pass
 
+    def load_pretrain_weights(self):
+        """Loading weights from trained GMF model"""
+        config = self.config
+        gmf_model = GMF(config)
+        if config['use_cuda'] is True:
+            gmf_model.cuda()
+        resume_checkpoint(gmf_model, model_dir=config['pretrain_mf'], device_id=config['device_id'])
+        self.embedding_user.weight.data = gmf_model.embedding_user.weight.data
+        self.embedding_item.weight.data = gmf_model.embedding_item.weight.data
+
 
 class MLPEngine(Engine):
     """Engine for training & evaluating GMF model"""
@@ -46,3 +58,6 @@ class MLPEngine(Engine):
             self.model.cuda()
         super(MLPEngine, self).__init__(config)
         print(self.model)
+
+        if config['pretrain']:
+            self.model.load_pretrain_weights()

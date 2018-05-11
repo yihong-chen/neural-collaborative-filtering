@@ -3,3 +3,5 @@
 src/__pycache__
 src/runs
 src/checkpoints
+res/.ipynb_checkpoints
+
