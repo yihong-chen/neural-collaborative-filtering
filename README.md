@@ -42,7 +42,7 @@ The pretrained version converges much faster.
 ### L2 regularization for MLP model
 a bit l2 regulzrization seems to improve the performance of the MLP model
 
-![L2 for MLP](./res/figure/mlp_l2_reg.PNG)
+![L2 for MLP](./res/figure/mlp_l2_reg.png)
 
 ### MLP with pretrained user/item embedding
 Pre-training the MLP model with user/item embedding from the trained GMF gives better result.
