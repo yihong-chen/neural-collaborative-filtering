@@ -5,9 +5,14 @@ from mlp import MLPEngine
 from neumf import NeuMFEngine
 from data import SampleGenerator
 
-gmf_config = {'alias': 'gmf_factor8neg4',
+gmf_config = {'alias': 'gmf_factor8neg4-adam-decayneg4-torch4',
               'num_epoch': 200,
               'batch_size': 1024,
+              # 'optimizer': 'sgd',
+              # 'optimizer': 'rmsprop',
+              # 'rmsprop_lr': 1e-3,
+              # 'rmsprop_alpha': 0.99,
+              # 'rmsprop_momentum': 0,
               'optimizer': 'adam',
               'adam_lr': 1e-3,
               'num_users': 6040,
@@ -16,7 +21,7 @@ gmf_config = {'alias': 'gmf_factor8neg4',
               'num_negative': 4,
               'l2_regularization': 0.01,
               'use_cuda': True,
-              'device_id': 7,
+              'device_id': 0,
               'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
 
 mlp_config = {'alias': 'mlp_factor8neg4_bz256_166432168_pretrain_reg_0.0000001',
@@ -73,10 +78,10 @@ print('Range of itemId is [{}, {}]'.format(ml1m_rating.itemId.min(), ml1m_rating
 sample_generator = SampleGenerator(ratings=ml1m_rating)
 evaluate_data = sample_generator.evaluate_data
 # Specify the exact model
-# config = gmf_config
-# engine = GMFEngine(config)
-config = mlp_config
-engine = MLPEngine(config)
+config = gmf_config
+engine = GMFEngine(config)
+# config = mlp_config
+# engine = MLPEngine(config)
 # config = neumf_config
 # engine = NeuMFEngine(config)
 for epoch in range(config['num_epoch']):

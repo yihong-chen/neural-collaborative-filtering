@@ -26,13 +26,10 @@ class Engine(object):
             users, items, ratings = users.cuda(), items.cuda(), ratings.cuda()
         self.opt.zero_grad()
         ratings_pred = self.model(users, items)
-        loss = self.crit(ratings_pred, ratings)
+        loss = self.crit(ratings_pred.view(-1), ratings)
         loss.backward()
         self.opt.step()
-        if self.config['use_cuda'] is True:
-            loss = loss.data.cpu().numpy()[0]
-        else:
-            loss = loss.data.numpy()[0]
+        loss = loss.item()
         return loss
 
     def train_an_epoch(self, train_loader, epoch_id):
