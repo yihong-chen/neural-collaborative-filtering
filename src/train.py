@@ -5,10 +5,12 @@ from mlp import MLPEngine
 from neumf import NeuMFEngine
 from data import SampleGenerator
 
-gmf_config = {'alias': 'gmf_factor8neg4-adam-decayneg4-torch4',
+gmf_config = {'alias': 'gmf_factor8neg4-adam-nodecay-torch1',
               'num_epoch': 200,
               'batch_size': 1024,
               # 'optimizer': 'sgd',
+              # 'sgd_lr': 1e-3,
+              # 'sgd_momentum': 0.9,
               # 'optimizer': 'rmsprop',
               # 'rmsprop_lr': 1e-3,
               # 'rmsprop_alpha': 0.99,
@@ -19,7 +21,7 @@ gmf_config = {'alias': 'gmf_factor8neg4-adam-decayneg4-torch4',
               'num_items': 3706,
               'latent_dim': 8,
               'num_negative': 4,
-              'l2_regularization': 0.01,
+              'l2_regularization': 0, # 0.01
               'use_cuda': True,
               'device_id': 0,
               'model_dir':'checkpoints/{}_Epoch{}_HR{:.4f}_NDCG{:.4f}.model'}
