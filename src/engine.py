@@ -38,13 +38,8 @@ class Engine(object):
         total_loss = 0
         for batch_id, batch in enumerate(train_loader):
             assert isinstance(batch[0], torch.LongTensor)
-            user, item, rating = Variable(batch[0]), Variable(batch[1]), Variable(batch[2])
+            user, item, rating = batch[0], batch[1], batch[2]
             rating = rating.float()
-
-            if self.config['use_cuda'] is True:
-                user = user.cuda()
-                item = item.cuda()
-                rating = rating.cuda()
             loss = self.train_single_batch(user, item, rating)
             print('[Training Epoch {}] Batch {}, Loss {}'.format(epoch_id, batch_id, loss))
             total_loss += loss
@@ -53,23 +48,24 @@ class Engine(object):
     def evaluate(self, evaluate_data, epoch_id):
         assert hasattr(self, 'model'), 'Please specify the exact model !'
         self.model.eval()
-        test_users, test_items = Variable(evaluate_data[0]), Variable(evaluate_data[1])
-        negative_users, negative_items = Variable(evaluate_data[2]), Variable(evaluate_data[3])
-        if self.config['use_cuda'] is True:
-            test_users = test_users.cuda()
-            test_items = test_items.cuda()
-            negative_users = negative_users.cuda()
-            negative_items = negative_items.cuda()
-        test_scores = self.model(test_users, test_items)
-        negative_scores = self.model(negative_users, negative_items)
-        if self.config['use_cuda'] is True:
-            test_users = test_users.cpu()
-            test_items = test_items.cpu()
-            test_scores = test_scores.cpu()
-            negative_users = negative_users.cpu()
-            negative_items = negative_items.cpu()
-            negative_scores = negative_scores.cpu()
-        self._metron.subjects = [test_users.data.view(-1).tolist(),
+        with torch.no_grad():
+            test_users, test_items = evaluate_data[0], evaluate_data[1]
+            negative_users, negative_items = evaluate_data[2], evaluate_data[3]
+            if self.config['use_cuda'] is True:
+                test_users = test_users.cuda()
+                test_items = test_items.cuda()
+                negative_users = negative_users.cuda()
+                negative_items = negative_items.cuda()
+            test_scores = self.model(test_users, test_items)
+            negative_scores = self.model(negative_users, negative_items)
+            if self.config['use_cuda'] is True:
+                test_users = test_users.cpu()
+                test_items = test_items.cpu()
+                test_scores = test_scores.cpu()
+                negative_users = negative_users.cpu()
+                negative_items = negative_items.cpu()
+                negative_scores = negative_scores.cpu()
+            self._metron.subjects = [test_users.data.view(-1).tolist(),
                                  test_items.data.view(-1).tolist(),
                                  test_scores.data.view(-1).tolist(),
                                  negative_users.data.view(-1).tolist(),
