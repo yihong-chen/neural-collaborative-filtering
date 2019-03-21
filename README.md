@@ -29,7 +29,7 @@ The authors of NCF actually published [a nice implementation](https://github.com
 ## Performance
 The hyper params are not tuned. Better performance can be achieved with careful tuning, especially for the MLP model. Pretraining the user embedding & item embedding might be helpful to improve the performance of the MLP model. 
 
-Experiments' results with `num_negative_samples = 4` and `dim_latent_factor=8` are shown as follows
+Experiments' results with `num_negative_samples = 4` and `dim_latent_factor=8`  are shown as follows
 
 ![GMF V.S. MLP](./res/figure/factor8neg4.png)
 
@@ -38,6 +38,9 @@ Note that the MLP model was trained from scratch but the authors suggest that th
 ![NeuMF pretrain V.S no pretrain](./res/figure/neumf_factor8neg4.png)
 
 The pretrained version converges much faster.
+
+### L2 regularization for GMF model
+Large l2 regularization might lead to the bug of  `HR=0.0 NDCG=0.0`
 
 ### L2 regularization for MLP model
 a bit l2 regulzrization seems to improve the performance of the MLP model
@@ -54,9 +57,8 @@ MLP network size = [16, 64, 32, 16, 8]
 
 ## TODO
 
-- [ ] migrate to pytorch 0.4
-- [ ] num of negative samples
-- [ ] check NDCG metric
+- [ ] migrate to torch 1.0
+
 
 
 
