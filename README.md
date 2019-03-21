@@ -55,10 +55,5 @@ MLP network size = [16, 64, 32, 16, 8]
 ![Pretrain for MLP](./res/figure/mlp_pretrain_hr.png)
 ![Pretrain for MLP](./res/figure/mlp_pretrain_ndcg.png)
 
-## TODO
-
-- [ ] migrate to torch 1.0
-
-
-
-
+### Pytorch Versions
+The repo works under torch 1.0. You can find the old versions working under torch 0.2 and 0.4 in **tags**.
