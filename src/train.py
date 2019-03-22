@@ -5,7 +5,7 @@ from mlp import MLPEngine
 from neumf import NeuMFEngine
 from data import SampleGenerator
 
-gmf_config = {'alias': 'gmf_factor8neg4-adam-nodecay-torch1-2',
+gmf_config = {'alias': 'gmf_factor8neg4-implict',
               'num_epoch': 200,
               'batch_size': 1024,
               # 'optimizer': 'sgd',

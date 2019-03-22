@@ -18,7 +18,10 @@ class Engine(object):
         self._writer = SummaryWriter(log_dir='runs/{}'.format(config['alias']))  # tensorboard writer
         self._writer.add_text('config', str(config), 0)
         self.opt = use_optimizer(self.model, config)
-        self.crit = torch.nn.MSELoss()
+        # explicit feedback
+        # self.crit = torch.nn.MSELoss()
+        # implicit feedback
+        self.crit = torch.nn.BCELoss()
 
     def train_single_batch(self, users, items, ratings):
         assert hasattr(self, 'model'), 'Please specify the exact model !'

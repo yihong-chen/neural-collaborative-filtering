@@ -39,12 +39,15 @@ class SampleGenerator(object):
         assert 'rating' in ratings.columns
 
         self.ratings = ratings
-        self.normalize_ratings = self._normalize(ratings)
+        # explicit feedback using normalized rating
+        # self.normalize_ratings = self._normalize(ratings) 
         self.user_pool = set(self.ratings['userId'].unique())
         self.item_pool = set(self.ratings['itemId'].unique())
         # create negative item samples for NCF learning
         self.negatives = self._sample_negative(ratings)
-        self.train_ratings, self.test_ratings = self._split_loo(self.normalize_ratings)
+        # explicit feedback using normalized rating
+        # self.train_ratings, self.test_ratings = self._split_loo(self.normalize_ratings)
+        self.train_ratings, self.test_ratings = self._split_loo(self.ratings)
 
     def _normalize(self, ratings):
         """normalize into [0, 1] from [0, max_rating]"""
@@ -77,7 +80,9 @@ class SampleGenerator(object):
         for row in train_ratings.itertuples():
             users.append(int(row.userId))
             items.append(int(row.itemId))
-            ratings.append(float(row.rating))
+            # explicit feedback
+            # ratings.append(float(row.rating))
+            ratings.append(float(1))
             for i in range(num_negatives):
                 users.append(int(row.userId))
                 items.append(int(row.negatives[i]))
