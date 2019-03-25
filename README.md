@@ -61,3 +61,6 @@ Ratings are set to 1 (interacted) or 0 (uninteracted). Train from scratch.
 
 ### Pytorch Versions
 The repo works under torch 1.0. You can find the old versions working under torch 0.2 and 0.4 in **tags**.
+
+### TODO
+- Batchify the test data to handle large dataset.
