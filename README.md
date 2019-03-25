@@ -55,8 +55,9 @@ MLP network size = [16, 64, 32, 16, 8]
 ![Pretrain for MLP](./res/figure/mlp_pretrain_hr.png)
 ![Pretrain for MLP](./res/figure/mlp_pretrain_ndcg.png)
 
+### Implicit feedback without pretrain
+Ratings are set to 1 (interacted) or 0 (uninteracted). Train from scratch.
+![binarize](./res/figure/binarize.png) 
+
 ### Pytorch Versions
 The repo works under torch 1.0. You can find the old versions working under torch 0.2 and 0.4 in **tags**.
-
-### TODO
-- [ ] update the result images with implicit feedback.
