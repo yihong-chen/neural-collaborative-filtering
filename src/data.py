@@ -39,21 +39,26 @@ class SampleGenerator(object):
         assert 'rating' in ratings.columns
 
         self.ratings = ratings
-        # explicit feedback using normalized rating
-        # self.normalize_ratings = self._normalize(ratings) 
+        # explicit feedback using _normalize and implicit using _binarize
+        # self.preprocess_ratings = self._normalize(ratings)
+        self.preprocess_ratings = self._binarize(ratings)
         self.user_pool = set(self.ratings['userId'].unique())
         self.item_pool = set(self.ratings['itemId'].unique())
         # create negative item samples for NCF learning
         self.negatives = self._sample_negative(ratings)
-        # explicit feedback using normalized rating
-        # self.train_ratings, self.test_ratings = self._split_loo(self.normalize_ratings)
-        self.train_ratings, self.test_ratings = self._split_loo(self.ratings)
+        self.train_ratings, self.test_ratings = self._split_loo(self.preprocess_ratings)
 
     def _normalize(self, ratings):
-        """normalize into [0, 1] from [0, max_rating]"""
+        """normalize into [0, 1] from [0, max_rating], explicit feedback"""
         ratings = deepcopy(ratings)
         max_rating = ratings.rating.max()
         ratings['rating'] = ratings.rating * 1.0 / max_rating
+        return ratings
+    
+    def _binarize(self, ratings):
+        """binarize into 0 or 1, imlicit feedback"""
+        ratings = deepcopy(ratings)
+        ratings['rating'][ratings['rating'] > 0] = 1.0
         return ratings
 
     def _split_loo(self, ratings):
@@ -80,9 +85,7 @@ class SampleGenerator(object):
         for row in train_ratings.itertuples():
             users.append(int(row.userId))
             items.append(int(row.itemId))
-            # explicit feedback
-            # ratings.append(float(row.rating))
-            ratings.append(float(1))
+            ratings.append(float(row.rating))
             for i in range(num_negatives):
                 users.append(int(row.userId))
                 items.append(int(row.negatives[i]))
