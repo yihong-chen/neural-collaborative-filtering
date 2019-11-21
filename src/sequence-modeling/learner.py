@@ -79,8 +79,8 @@ class Learner:
                 scores, hidden = self.model(emb, hidden)
                 # Sample from the network as a multinomial distribution
                 output_dist = scores.data.view(-1).div(0.8).exp()
-                sample = torch.multinomial(output_dist, 1)[0]
-    #             print ("Sampled: ", sample)
+                sample = torch.multinomial(output_dist, 1)[0].numpy()
+#                 print ("Sampled:", sample)
                 seq.append(sample)
                 cur_movie_id = sample
         return seq

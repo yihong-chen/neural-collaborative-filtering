@@ -30,7 +30,7 @@ class RNNModel(nn.Module):
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
     def forward(self, emb, hidden):
-        output, hidden = self.rnn(emb, hidden)
+        output, hidden = self.rnn(self.dropout(emb), hidden)
         scores = self.decoder(self.dropout(output))
 #         print ("Hidden at the end of forward", hidden.shape)
         return scores, hidden
