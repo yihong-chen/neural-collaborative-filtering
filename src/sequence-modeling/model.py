@@ -6,16 +6,23 @@ import torch.nn.functional as F
 class RNNModel(nn.Module):
     """Container module with an encoder, a recurrent module, and a decoder."""
 
-    def __init__(self, rnn_type, ntoken, ninp, nhid, nlayers):
+    def __init__(self, rnn_type, ntoken, input_size, hidden_size, nlayers, temporal_batch_size=10):
         super(RNNModel, self).__init__()
-        self.rnn = nn.RNN(ninp, nhid, nlayers, nonlinearity='tanh')
-        self.decoder = nn.Linear(nhid, ntoken)
+        self.rnn_type = rnn_type
+        self.temporal_batch_size = temporal_batch_size
+        self.hidden_size = hidden_size
+        self.nlayers = nlayers
+        
+        if self.rnn_type == "rnn":
+            self.rnn = nn.RNN(input_size, hidden_size, nlayers, nonlinearity='tanh')
+        elif self.rnn_type == "gru":
+            self.rnn = nn.GRU(input_size, hidden_size, nlayers)
+        elif self.rnn_type == "lstm":
+            self.rnn = nn.LSTM(input_size, hidden_size, nlayers)
+            
+        self.decoder = nn.Linear(hidden_size, ntoken)
 
         self.init_weights()
-
-        self.rnn_type = rnn_type
-        self.nhid = nhid
-        self.nlayers = nlayers
 
     def init_weights(self):
         initrange = 0.1
@@ -28,10 +35,10 @@ class RNNModel(nn.Module):
 #         print ("Hidden at the end of forward", hidden.shape)
         return scores, hidden
 
-    def init_hidden(self, bsz):
+    def init_hidden(self):
         weight = next(self.parameters())
-        if self.rnn_type == 'LSTM':
-            return (weight.new_zeros(self.nlayers, bsz, self.nhid),
-                    weight.new_zeros(self.nlayers, bsz, self.nhid))
+        if self.rnn_type == 'lstm':
+            return (weight.new_zeros(self.nlayers, self.temporal_batch_size, self.hidden_size),
+                    weight.new_zeros(self.nlayers, self.temporal_batch_size, self.hidden_size))
         else:
-            return weight.new_zeros(self.nlayers, bsz, self.nhid)
+            return weight.new_zeros(self.nlayers, self.temporal_batch_size, self.hidden_size)
