@@ -6,10 +6,9 @@ import torch.nn.functional as F
 class RNNModel(nn.Module):
     """Container module with an encoder, a recurrent module, and a decoder."""
 
-    def __init__(self, rnn_type, ntoken, input_size, hidden_size, nlayers, dropout=0.5, temporal_batch_size=10):
+    def __init__(self, rnn_type, ntoken, input_size, hidden_size, nlayers, dropout=0.5):
         super(RNNModel, self).__init__()
         self.rnn_type = rnn_type
-        self.temporal_batch_size = temporal_batch_size
         self.hidden_size = hidden_size
         self.nlayers = nlayers
         
@@ -36,10 +35,10 @@ class RNNModel(nn.Module):
 #         print ("Hidden at the end of forward", hidden.shape)
         return scores, hidden
 
-    def init_hidden(self):
+    def init_hidden(self, batch_size):
         weight = next(self.parameters())
         if self.rnn_type == 'lstm':
-            return (weight.new_zeros(self.nlayers, self.temporal_batch_size, self.hidden_size),
-                    weight.new_zeros(self.nlayers, self.temporal_batch_size, self.hidden_size))
+            return (weight.new_zeros(self.nlayers, batch_size, self.hidden_size),
+                    weight.new_zeros(self.nlayers, batch_size, self.hidden_size))
         else:
-            return weight.new_zeros(self.nlayers, self.temporal_batch_size, self.hidden_size)
+            return weight.new_zeros(self.nlayers, batch_size, self.hidden_size)
