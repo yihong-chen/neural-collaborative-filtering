@@ -8,13 +8,14 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 class Learner:
-    def __init__(self, model, criterion):
+    def __init__(self, model, criterion, optimizer):
         self.model = model
         self.criterion = criterion
+        self.optimizer = optimizer
         self.train_loss = []
         self.val_loss = []
 
-    def train(self, train_data, train_tgt, ntokens, lr=1, batch_size = 10):
+    def train(self, train_data, train_tgt, ntokens, batch_size = 10):
         # Turn on training mode which enables dropout.
 #         print ("Training data:", train_data.shape, train_tgt.shape)
         self.model.train()
@@ -40,16 +41,15 @@ class Learner:
 
             # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
             torch.nn.utils.clip_grad_norm_(self.model.parameters(),  0.25)
-            for p in self.model.parameters():
-                p.data.add_(-lr, p.grad.data)
+            self.optimizer.step()
 
             losses.append(loss.item())
 
             if i*batch_size % 1000 == 0 and i>0:
                 avg_batch_loss = np.mean(losses)
-                print('{:5d}/{:5d} batches | lr {:02.2f} | '
+                print('{:5d}/{:5d} batches  | '
                         'loss {:5.2f}'.format(
-                    i, num_batches, lr, avg_batch_loss))
+                    i, num_batches, avg_batch_loss))
         self.train_loss.append(np.mean(losses))
 
     def evaluate(self, data, tgt, ntokens, val=True):
@@ -60,12 +60,10 @@ class Learner:
     
         hidden = self.model.init_hidden()
         with torch.no_grad():
-#             for i, batch in enumerate(data):
-            output, hidden = self.model(data, hidden)
-#             print ("Output:", output.shape)
+            scores, hidden = self.model(data, hidden)
+#             print ("Scores:", scores.shape)
 #             hidden = hidden.detach()
-            output_flat = output.view(-1, ntokens)
-            loss = self.criterion(output_flat, tgt.view(-1)).item()
+            loss = self.criterion(scores.view(-1, ntokens), tgt.view(-1)).item()
         if val:
             self.val_loss.append(loss)
         return loss
