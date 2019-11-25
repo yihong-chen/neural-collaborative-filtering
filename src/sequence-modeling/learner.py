@@ -89,4 +89,4 @@ class Learner:
         plt.subplot(2, 1, 1)
         plt.plot(self.train_loss, label='Train')
         plt.plot(self.val_loss, label='Val')
-        plt.legend(loc='lower left')
+        plt.legend(loc='upper right')

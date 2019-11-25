@@ -75,7 +75,21 @@ def UserSequences(ratingData,nextK):
                 '''
                 
                 
-    return userSequences            
+    return userSequences
+
+def GetAllUserSequences(data, seq_length):
+    timeSortedData = data.sort_values(['Timestamp'],ascending=True)
+    timeSortedDataPerUserObj = timeSortedData.groupby("UserID")
+    userSequences = []
+    for idx,data in timeSortedDataPerUserObj:
+            userDfsize = data.shape[0]
+
+            for start in np.arange(0, userDfsize, seq_length):
+                if userDfsize-start >= seq_length:
+                    data.reset_index(inplace=True,drop=True)
+                    userSequences.append(list(data[start:start+seq_length][['MovieID']].to_records(index=False)))
+                
+    return userSequences
 
 ## functions to combine user-movie-rating encoding
 ## embeddingFlag - whether to use embedding or no
